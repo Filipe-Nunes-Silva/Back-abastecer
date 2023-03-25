@@ -11,6 +11,16 @@ const tokenManager = {
 
         return token;
     },
+
+    verifyJWT: async (token) => {
+        try {
+            const data = jwt.verify(token, process.env.SECRET);
+            return data;
+        }
+        catch (error) {
+            return false;
+        };
+    },
 };
 
 

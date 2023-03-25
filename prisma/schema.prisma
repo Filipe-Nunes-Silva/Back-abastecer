@@ -18,35 +18,32 @@ model User {
   phone     String?
   createdAt DateTime @default(now())
   updateAt  DateTime @updatedAt
-
-  Vehicles Vehicles[]
 }
 
-model Vehicles {
-  id          Int      @id @default(autoincrement())
-  description String
-  plate       String //Placa
-  renavam     String
-  color       String
-  potency     String //Potencia
-  model       String
-  brand       String //marca
-  createdAt   DateTime @default(now())
-  updateAt    DateTime @updatedAt
-  userId      Int?
-
-  User   User?    @relation(fields: [userId], references: [id])
-  Supply Supply[]
+model Vehicle {
+  id              Int       @id @default(autoincrement())
+  description     String
+  plate           String //Placa
+  renavam         String
+  color           String
+  potency         String //Potencia
+  model           String
+  brand           String //marca
+  createdByUserId Int
+  createdAt       DateTime  @default(now())
+  updateAt        DateTime  @updatedAt
+  Fueling         Fueling[]
 }
 
-model Supply {
-  id         Int      @id @default(autoincrement())
-  amount     Int //Quantidade
-  type       String //tipo
-  value      Float //Valor
-  createdAt  DateTime @default(now())
-  updateAt   DateTime @updatedAt
-  vehiclesId Int
+model Fueling {
+  id              Int      @id @default(autoincrement())
+  amount          Int //Quantidade
+  type            String //tipo
+  value           Float //Valor
+  createdByUserId Int
+  createdAt       DateTime @default(now())
+  updateAt        DateTime @updatedAt
+  vehicleId       Int
 
-  Vehicles Vehicles @relation(fields: [vehiclesId], references: [id])
+  Vehicle Vehicle @relation(fields: [vehicleId], references: [id])
 }

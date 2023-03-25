@@ -1,18 +1,19 @@
 const { body } = require('express-validator');
 const { prisma } = require('../../../db/prisma');
 
-function register() {
+
+function update() {
     return [
         body('name')
-            .trim()
+            .optional()
             .isLength({ min: 3 })
             .withMessage('Nome precisa de 3 ou mais caracteres'),
         body('password')
+            .optional()
             .isLength({ min: 3 })
             .withMessage('Senha precisa de 3 ou mais caracteres'),
         body('cpf')
-            .exists()
-            .withMessage('Cpf é obrigatório')
+            .optional()
             .isLength({ min: 11 })
             .withMessage('Cpf é incorreto')
             .custom(async (value) => {
@@ -41,5 +42,5 @@ function register() {
 };
 
 module.exports = {
-    register
+    update
 };
