@@ -11,39 +11,47 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  name      String
-  cpf       String   @unique
-  password  String
-  phone     String?
-  createdAt DateTime @default(now())
-  updateAt  DateTime @updatedAt
+  id           Int      @id @default(autoincrement())
+  name         String
+  cpf          String   @unique
+  password     String
+  phone        String?
+  createdAt    DateTime @default(now())
+  updateAt     DateTime @updatedAt
+  createByUser Int
+
+  Vehicle Vehicle[]
+  Fueling Fueling[]
 }
 
 model Vehicle {
-  id              Int       @id @default(autoincrement())
-  description     String
-  plate           String //Placa
-  renavam         String
-  color           String
-  potency         String //Potencia
-  model           String
-  brand           String //marca
-  createdByUserId Int
-  createdAt       DateTime  @default(now())
-  updateAt        DateTime  @updatedAt
-  Fueling         Fueling[]
+  id          Int      @id @default(autoincrement())
+  description String?
+  plate       String //Placa
+  renavam     String
+  color       String
+  potency     String //Potencia
+  model       String
+  brand       String //marca
+  createdAt   DateTime @default(now())
+  updateAt    DateTime @updatedAt
+
+  User   User? @relation(fields: [userId], references: [id])
+  userId Int?
+
+  Fueling Fueling[]
 }
 
 model Fueling {
-  id              Int      @id @default(autoincrement())
-  amount          Int //Quantidade
-  type            String //tipo
-  value           Float //Valor
-  createdByUserId Int
-  createdAt       DateTime @default(now())
-  updateAt        DateTime @updatedAt
-  vehicleId       Int
+  id        Int      @id @default(autoincrement())
+  amount    Int //Quantidade
+  type      String //tipo
+  value     Float //Valor
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
 
-  Vehicle Vehicle @relation(fields: [vehicleId], references: [id])
+  User      User?    @relation(fields: [userId], references: [id])
+  userId    Int?
+  Vehicle   Vehicle? @relation(fields: [vehicleId], references: [id])
+  vehicleId Int?
 }

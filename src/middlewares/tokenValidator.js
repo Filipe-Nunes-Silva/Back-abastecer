@@ -9,7 +9,6 @@ const tokenValidator = async (req, res, next) => {
             res.status(401).json({ notallowed: true });
             return;
         };
-
         req.userId = token.id;
     }
     else {

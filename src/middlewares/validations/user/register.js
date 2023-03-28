@@ -1,7 +1,7 @@
 const { body } = require('express-validator');
 const { prisma } = require('../../../db/prisma');
 
-function register() {
+function validateRegisterUser() {
     return [
         body('name')
             .trim()
@@ -41,5 +41,5 @@ function register() {
 };
 
 module.exports = {
-    register
+    validateRegisterUser
 };

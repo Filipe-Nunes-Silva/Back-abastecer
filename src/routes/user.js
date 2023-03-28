@@ -4,15 +4,16 @@ const { validate } = require('../middlewares/validations/handleValidations');
 const { UserController } = require('../controllers/UserController');
 
 
-const { register } = require('../middlewares/validations/user/register');
-router.post('/new', register(), validate, UserController.createUser);
+const { validateRegisterUser } = require('../middlewares/validations/user/register');
+router.post('/new', validateRegisterUser(), validate, UserController.createUser);
 
 router.get('/', UserController.getUsers);
 
-const { update } = require('../middlewares/validations/user/update');
-router.put('/update', update(), validate, UserController.updateUser);
+const { validateUpdateUser } = require('../middlewares/validations/user/update');
+router.put('/update', validateUpdateUser(), validate, UserController.updateUser);
 
-router.delete('/delete', UserController.deleteUser);
+const { validateDeleteUser } = require('../middlewares/validations/user/delete');
+router.delete('/delete', validateDeleteUser(), validate, UserController.deleteUser);
 
 
 

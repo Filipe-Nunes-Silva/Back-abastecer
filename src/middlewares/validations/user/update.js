@@ -2,7 +2,7 @@ const { body } = require('express-validator');
 const { prisma } = require('../../../db/prisma');
 
 
-function update() {
+function validateUpdateUser() {
     return [
         body('name')
             .optional()
@@ -42,5 +42,5 @@ function update() {
 };
 
 module.exports = {
-    update
+    validateUpdateUser
 };

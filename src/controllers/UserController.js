@@ -4,9 +4,51 @@ const { tokenManager } = require('../helpers/tokenManager');
 
 class UserController {
 
+    static async initialUser(req, res) {
+        const { name, cpf, password, phone } = req.body;
+        let passwordHash = encryption.newPasswordHash(password);
+
+        try {
+            const hasCreatedUsers = await prisma.user.findMany();
+
+            if (hasCreatedUsers.length === 0) {
+
+                const firstUser = await prisma.user.create({
+                    data: {
+                        name,
+                        cpf,
+                        password: passwordHash,
+                        phone,
+                        createByUser: 0,
+                    },
+                    select: {
+                        id: true,
+                        name: true,
+                        cpf: true,
+                        password: false,
+                        phone: true,
+                        createdAt: true,
+                        updateAt: true,
+                        createByUser: true,
+                    },
+                });
+
+                return res.status(200).json(firstUser);
+            }
+            else {
+                return res.status(401).json({ error: 'Já existe usuários criado, faça login e tente novamente!' });
+            };
+        }
+        catch (error) {
+            console.log(error);
+            res.status(500).json({ errors: [{ msg: 'Houve algum erro no servidor, tente novamente!' }] });
+        };
+    };
+
     static async createUser(req, res) {
         const { name, cpf, password, phone } = req.body;
         let passwordHash = encryption.newPasswordHash(password);
+        const userId = req.userId;
 
         try {
 
@@ -15,7 +57,8 @@ class UserController {
                     name,
                     cpf,
                     password: passwordHash,
-                    phone
+                    phone,
+                    createByUser: parseInt(userId),
                 },
                 select: {
                     id: true,
@@ -28,8 +71,7 @@ class UserController {
                 },
             });
 
-
-            return res.status(200).json({ user });
+            return res.status(200).json(user);
 
         }
         catch (error) {
@@ -54,7 +96,7 @@ class UserController {
                 }
             });
 
-            return res.status(200).json({ users });
+            return res.status(200).json(users);
 
         }
         catch (error) {
@@ -65,19 +107,19 @@ class UserController {
     };
 
     static async updateUser(req, res) {
-        const reqValues = req.body;
+        const data = req.body;
 
-        if (reqValues.password) {
-            let passwordHash = encryption.newPasswordHash(reqValues.password);
-            reqValues.password = passwordHash;
+        if (data.password) {
+            let passwordHash = encryption.newPasswordHash(data.password);
+            data.password = passwordHash;
         };
 
         try {
             const editedUser = await prisma.user.update({
                 where: {
-                    id: reqValues.id,
+                    id: data.id,
                 },
-                data: reqValues,
+                data,
             });
 
             delete editedUser.password;
