@@ -30,6 +30,12 @@ function validateUpdateVehicle() {
             .optional()
             .isLength({ min: 7, max: 7 })
             .withMessage('Campo placa exige 7 caracteres'),
+        body('userId')
+            .custom((value) => {
+                if (value) {
+                    return Promise.reject('Não autorizado!');
+                };
+            }),
     ];
     //Verificar se é uma placa valida
 };

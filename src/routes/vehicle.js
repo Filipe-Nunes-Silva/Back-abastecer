@@ -12,8 +12,7 @@ router.get('/', VehicleController.getVehicles);
 const { validateUpdateVehicle } = require('../middlewares/validations/vehicle/update');
 router.put('/update', validateUpdateVehicle(), validate, VehicleController.updateVehicle);
 
-const { validateDeleteVehicle } = require('../middlewares/validations/vehicle/delete');
-router.delete('/delete', validateDeleteVehicle(), validate, VehicleController.deleteVehicle);
+router.delete('/delete/:id', VehicleController.deleteVehicle);
 
 
 module.exports = router;

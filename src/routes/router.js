@@ -15,4 +15,7 @@ router.use('/user', tokenValidator, userRoutes);
 const vehicleRoutes = require('./vehicle');
 router.use('/vehicle', tokenValidator, vehicleRoutes);
 
+const fuelingRoutes = require('./fueling');
+router.use('/fueling', tokenValidator, fuelingRoutes);
+
 module.exports = router;

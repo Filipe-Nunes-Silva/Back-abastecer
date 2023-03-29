@@ -133,8 +133,8 @@ class UserController {
     };
 
     static async deleteUser(req, res) {
-        const userId = req.userId;
-        const { id } = req.body;
+        const userId = parseInt(req.userId);
+        const id = parseInt(req.params.id);
 
         try {
             const userToBeDeleted = await prisma.user.delete({

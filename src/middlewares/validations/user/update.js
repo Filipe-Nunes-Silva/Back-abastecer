@@ -37,6 +37,13 @@ function validateUpdateUser() {
                     res.status(500).json({ errors: 'Houve algum erro no servidor, tente novamente!' });
                 };
             }),
+        body('createByUser')
+            .custom((value) => {
+                if (value) {
+                    return Promise.reject('Não autorizado!');
+                };
+            }),
+
         //Verificar se é um cpf valido
     ];
 };

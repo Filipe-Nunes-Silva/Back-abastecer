@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Fueling" ALTER COLUMN "amount" SET DATA TYPE DOUBLE PRECISION;

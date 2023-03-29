@@ -44,7 +44,7 @@ model Vehicle {
 
 model Fueling {
   id        Int      @id @default(autoincrement())
-  amount    Int //Quantidade
+  amount    Float //Quantidade
   type      String //tipo
   value     Float //Valor
   createdAt DateTime @default(now())
