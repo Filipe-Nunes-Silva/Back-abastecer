@@ -1,19 +1,49 @@
 const { tokenManager } = require('../helpers/tokenManager');
 
-const tokenValidator = async (req, res, next) => {
-    if (req.headers['authorization']) {
-        const reqToken = await req.headers['authorization'].split(' ')[1];
-        const token = await tokenManager.verifyJWT(reqToken);
+const allRoutes = {
+    '/initialuser': {
+        post: { protected: false },
+    },
+    '/access': {
+        post: { protected: false },
+    },
+    '/user': {
+        get: { protected: true },
+        post: { protected: true },
+        put: { protected: true },
+        delete: { protected: true },
+    },
+    '/vehicle': {
+        get: { protected: false },
+        post: { protected: true },
+        put: { protected: true },
+        delete: { protected: true },
+    },
+    '/fueling': {
+        get: { protected: false },
+        post: { protected: true },
+        put: { protected: true },
+        delete: { protected: true },
+    },
+};
 
-        if (!token) {
-            res.status(401).json({ notallowed: true });
-            return;
+const tokenValidator = async (req, res, next) => {
+
+    const route = allRoutes[req.path][req.method.toLowerCase()];
+
+    if (route && route.protected) {
+        if (req.headers['authorization']) {
+            const reqToken = await req.headers['authorization'].split(' ')[1];
+            const token = await tokenManager.verifyJWT(reqToken);
+
+            if (!token) {
+                return res.status(401).json({ notallowed: true });
+            };
+            req.userId = token.id;
+        }
+        else {
+            return res.status(401).json({ notallowed: true });
         };
-        req.userId = token.id;
-    }
-    else {
-        res.status(401).json({ notallowed: true });
-        return;
     };
 
     next();

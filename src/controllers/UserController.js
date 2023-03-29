@@ -46,9 +46,9 @@ class UserController {
     };
 
     static async createUser(req, res) {
+        const userId = req.userId;
         const { name, cpf, password, phone } = req.body;
         let passwordHash = encryption.newPasswordHash(password);
-        const userId = req.userId;
 
         try {
 
