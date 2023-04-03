@@ -1,8 +1,48 @@
 const { encryption } = require('../helpers/passwordEncryption');
 const { prisma } = require('../db/prisma');
-const { tokenManager } = require('../helpers/tokenManager');
 
 class UserController {
+
+    static async initialUser(req, res) {
+        const { name, cpf, password, phone } = req.body;
+        let passwordHash = encryption.newPasswordHash(password);
+
+        try {
+
+            const users = await prisma.user.findMany();
+            if (users.length > 0) {
+                return res.status(401).json({ errors: [{ msg: 'Já existe usúario cadastrado!' }] });
+            };
+
+            const user = await prisma.user.create({
+                data: {
+                    name,
+                    cpf,
+                    password: passwordHash,
+                    phone,
+                    createByUser: 0,
+                },
+                select: {
+                    id: true,
+                    name: true,
+                    cpf: true,
+                    password: false,
+                    phone: true,
+                    createByUser: true,
+                    createdAt: true,
+                    updateAt: true
+                },
+            });
+
+            return res.status(200).json(user);
+
+        }
+        catch (error) {
+            console.log(error);
+            res.status(500).json({ errors: [{ msg: 'Houve algum erro no servidor, tente novamente!' }] });
+
+        };
+    };
 
     static async createUser(req, res) {
         const userId = req.userId;

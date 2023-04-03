@@ -14,4 +14,10 @@ router.use('/user', userRoutes);
 router.use('/vehicle', vehicleRoutes);
 router.use('/fueling', fuelingRoutes);
 
+//Initial User
+const { UserController } = require('../controllers/UserController');
+const { validateRegisterUser } = require('../middlewares/validations/user/register');
+const { validate } = require('../middlewares/validations/handleValidations');
+router.post('/initialuser', validateRegisterUser(), validate, UserController.initialUser);
+
 module.exports = router;
