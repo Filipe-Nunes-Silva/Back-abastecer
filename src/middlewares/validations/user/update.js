@@ -16,33 +16,6 @@ function validateUpdateUser() {
             .optional()
             .isLength({ min: 11 })
             .withMessage('Cpf é incorreto')
-            .custom(async (value) => {
-                try {
-
-                    const existCPF = await prisma.user.findMany({
-                        where: {
-                            cpf: {
-                                contains: value,
-                            },
-                        },
-                    });
-
-                    if (existCPF.length > 0) {
-                        return Promise.reject('CPF já cadastrado!');
-                    };
-
-                    return true;
-
-                } catch (error) {
-                    res.status(500).json({ errors: 'Houve algum erro no servidor, tente novamente!' });
-                };
-            }),
-        body('createByUser')
-            .custom((value) => {
-                if (value) {
-                    return Promise.reject('Não autorizado!');
-                };
-            }),
 
         //Verificar se é um cpf valido
     ];

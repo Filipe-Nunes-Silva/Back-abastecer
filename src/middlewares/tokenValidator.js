@@ -13,6 +13,9 @@ const allRoutes = {
         put: { protected: true },
         delete: { protected: true },
     },
+    '/user/getid': {
+        get: { protected: true },
+    },
     '/vehicle': {
         get: { protected: false },
         post: { protected: true },
@@ -29,8 +32,7 @@ const allRoutes = {
 
 const tokenValidator = async (req, res, next) => {
 
-    const route = allRoutes[req.path][req.method.toLowerCase()];
-
+    const route = allRoutes[req.path]?.[req.method.toLowerCase()];
     if (route && route.protected) {
         if (req.headers['authorization']) {
             const reqToken = await req.headers['authorization'].split(' ')[1];

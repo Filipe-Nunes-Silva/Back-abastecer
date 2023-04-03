@@ -4,47 +4,6 @@ const { tokenManager } = require('../helpers/tokenManager');
 
 class UserController {
 
-    static async initialUser(req, res) {
-        const { name, cpf, password, phone } = req.body;
-        let passwordHash = encryption.newPasswordHash(password);
-
-        try {
-            const hasCreatedUsers = await prisma.user.findMany();
-
-            if (hasCreatedUsers.length === 0) {
-
-                const firstUser = await prisma.user.create({
-                    data: {
-                        name,
-                        cpf,
-                        password: passwordHash,
-                        phone,
-                        createByUser: 0,
-                    },
-                    select: {
-                        id: true,
-                        name: true,
-                        cpf: true,
-                        password: false,
-                        phone: true,
-                        createdAt: true,
-                        updateAt: true,
-                        createByUser: true,
-                    },
-                });
-
-                return res.status(200).json(firstUser);
-            }
-            else {
-                return res.status(401).json({ error: 'Já existe usuários criado, faça login e tente novamente!' });
-            };
-        }
-        catch (error) {
-            console.log(error);
-            res.status(500).json({ errors: [{ msg: 'Houve algum erro no servidor, tente novamente!' }] });
-        };
-    };
-
     static async createUser(req, res) {
         const userId = req.userId;
         const { name, cpf, password, phone } = req.body;
@@ -66,6 +25,7 @@ class UserController {
                     cpf: true,
                     password: false,
                     phone: true,
+                    createByUser: true,
                     createdAt: true,
                     updateAt: true
                 },
@@ -89,10 +49,12 @@ class UserController {
                 select: {
                     id: true,
                     name: true,
+                    cpf: true,
                     password: false,
                     phone: true,
                     createdAt: true,
                     updateAt: true,
+                    createByUser: true,
                 }
             });
 
@@ -106,8 +68,37 @@ class UserController {
 
     };
 
+    static async getUser(req, res) {
+        const id = parseInt(req.params.id);
+
+        try {
+            const user = await prisma.user.findMany({
+                where: {
+                    id,
+                },
+                select: {
+                    id: true,
+                    name: true,
+                    cpf: true,
+                    password: false,
+                    phone: true,
+                    createdAt: true,
+                    updateAt: true,
+                    createByUser: true,
+                },
+            });
+
+            return res.status(200).json(user);
+        }
+        catch (error) {
+            console.log(error);
+            res.status(500).json({ errors: [{ msg: 'Houve algum erro no servidor, tente novamente!' }] });
+        };
+    };
+
     static async updateUser(req, res) {
         const data = req.body;
+        const userId = parseInt(req.userId);
 
         if (data.password) {
             let passwordHash = encryption.newPasswordHash(data.password);
@@ -117,7 +108,7 @@ class UserController {
         try {
             const editedUser = await prisma.user.update({
                 where: {
-                    id: data.id,
+                    id: userId,
                 },
                 data,
             });
@@ -132,22 +123,22 @@ class UserController {
         };
     };
 
+    static async getIdConectadoAPI(req, res) {
+        const userId = req.userId;
+        res.status(200).json({ id: userId });
+    };
+
     static async deleteUser(req, res) {
         const userId = parseInt(req.userId);
-        const id = parseInt(req.params.id);
 
         try {
             const userToBeDeleted = await prisma.user.delete({
                 where: {
-                    id,
+                    id: userId,
                 },
             });
 
             delete userToBeDeleted.password;
-
-            if (userId == id) {
-                userToBeDeleted.selfDeleted = true;
-            };
 
             res.status(200).json({ msg: 'sucesso!', user: userToBeDeleted });
 

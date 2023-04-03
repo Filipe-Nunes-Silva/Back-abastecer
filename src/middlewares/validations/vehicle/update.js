@@ -29,11 +29,21 @@ function validateUpdateVehicle() {
         body('plate')
             .optional()
             .isLength({ min: 7, max: 7 })
-            .withMessage('Campo placa exige 7 caracteres'),
-        body('userId')
+            .withMessage('Campo placa exige 7 caracteres')
             .custom((value) => {
-                if (value) {
-                    return Promise.reject('Não autorizado!');
+                const regexPlate = /^[a-zA-Z]{3}[0-9]{4}$/;
+                const regexPlateMerc = /^[a-zA-Z]{3}[0-9]{1}[a-zA-Z]{1}[0-9]{2}$/;
+
+                const testeregexPlate = regexPlate.test(value);
+                const testeregexPlateMerc = regexPlateMerc.test(value)
+                if (testeregexPlate) {
+                    return true;
+                }
+                else if (testeregexPlateMerc) {
+                    return true;
+                }
+                else {
+                    return Promise.reject('Placa invalída');
                 };
             }),
     ];

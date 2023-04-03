@@ -7,16 +7,15 @@ dotEnv.config();
 const app = express();
 const serverPort = process.env.PORT;
 
+const dirPublic = path.join(__dirname, 'public');
+app.use('/public', express.static(dirPublic));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 const router = require('./routes/router');
 app.use(router);
-
-
-
-
 
 app.listen(serverPort, (error) => {
     if (error) {

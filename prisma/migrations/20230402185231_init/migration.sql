@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Fueling" ALTER COLUMN "amount" SET DATA TYPE TEXT,
+ALTER COLUMN "value" SET DATA TYPE TEXT;

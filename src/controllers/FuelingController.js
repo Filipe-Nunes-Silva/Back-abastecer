@@ -6,6 +6,7 @@ class FuelingController {
         const userId = req.userId;
         const data = req.body;
 
+        data.vehicleId = parseInt(data.vehicleId);
         data.userId = parseInt(userId);
 
         try {
@@ -34,13 +35,31 @@ class FuelingController {
         };
     };
 
+    static async getFueling(req, res) {
+        const id = parseInt(req.params.id);
+        try {
+            const fueling = await prisma.fueling.findMany({
+                where: {
+                    id: id,
+                },
+            });
+
+            res.status(200).json(fueling);
+        }
+        catch (error) {
+            console.log(error);
+            res.status(500).json({ errors: [{ msg: 'Houve algum erro no servidor, tente novamente!' }] });
+        };
+    };
+
     static async updateFueling(req, res) {
         const data = req.body;
+        const id = parseInt(req.params.id);
 
         try {
             const editedFueling = await prisma.fueling.update({
                 where: {
-                    id: data.id,
+                    id: id,
                 },
                 data,
             });

@@ -11,7 +11,6 @@ const encryption = {
         const res = bcrypt.compareSync(reqPassword, dbPassword);
         return res;
     },
-
 };
 
 module.exports = {

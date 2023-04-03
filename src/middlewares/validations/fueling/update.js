@@ -15,13 +15,6 @@ function validateUpdateFueling() {
             .optional()
             .exists()
             .withMessage('Valor é obrigatório'),
-        body('userId')
-            .optional()
-            .custom((value) => {
-                if (value) {
-                    return Promise.reject('Não autorizado!');
-                };
-            }),
         body('vehicleId')
             .optional()
             .custom((value) => {

@@ -33,13 +33,32 @@ class VehicleController {
         };
     };
 
+    static async getVehicle(req, res) {
+        const id = parseInt(req.params.id);
+
+        try {
+            const vehicle = await prisma.vehicle.findMany({
+                where: {
+                    id: id,
+                },
+            });
+
+            res.status(200).json(vehicle);
+
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({ errors: [{ msg: 'Houve algum erro no servidor, tente novamente!' }] });
+        };
+    };
+
     static async updateVehicle(req, res) {
         const data = req.body;
+        const id = parseInt(req.params.id);
 
         try {
             const editedVehicle = await prisma.vehicle.update({
                 where: {
-                    id: data.id,
+                    id: id,
                 },
                 data,
             });

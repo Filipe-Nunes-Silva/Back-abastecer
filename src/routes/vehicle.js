@@ -3,14 +3,13 @@ const router = express.Router();
 const { validate } = require('../middlewares/validations/handleValidations');
 const { VehicleController } = require('../controllers/VehicleController');
 
-router.get('/', VehicleController.getVehicles);
-
 const { validateRegisterVehicle } = require('../middlewares/validations/vehicle/register');
-router.post('/', validateRegisterVehicle(), validate, VehicleController.createVehicle);
-
 const { validateUpdateVehicle } = require('../middlewares/validations/vehicle/update');
-router.put('/', validateUpdateVehicle(), validate, VehicleController.updateVehicle);
 
+router.get('/', VehicleController.getVehicles);
+router.get('/:id', VehicleController.getVehicle);
+router.post('/', validateRegisterVehicle(), validate, VehicleController.createVehicle);
+router.put('/:id', validateUpdateVehicle(), validate, VehicleController.updateVehicle);
 router.delete('/:id', VehicleController.deleteVehicle);
 
 
