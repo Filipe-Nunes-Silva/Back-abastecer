@@ -19,7 +19,7 @@ DATABASE_URL="postgresql://postgres:12345@localhost:5432/nomedobanco?schema=publ
 
 5 - Va no repositorio do frontend e inicie !
 
-----Tecnologias Ultilizadas----
+----Tecnologias Ultilizadas----  
 -prisma  
 -bcryptjs 
 -express  
